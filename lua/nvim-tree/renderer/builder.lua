@@ -345,14 +345,6 @@ function Builder:num_visible(nodes)
 end
 
 ---@private
-function Builder:build_more_line()
-  local indent_str = string.rep(" ", self.depth * self.explorer.opts.renderer.indent_width)
-  local line = indent_str .. "... More"
-  table.insert(self.lines, line)
-  self.index = self.index + 1
-end
-
----@private
 function Builder:build_lines(node)
   if not node then
     node = self.explorer
@@ -369,7 +361,9 @@ function Builder:build_lines(node)
         idx = idx + 1
       end
     end
-    self:build_more_line()
+    local line_nr = #self.lines - 1
+    self.virtual_lines[line_nr] = self.virtual_lines[line_nr] or {}
+    table.insert(self.virtual_lines[line_nr], { { "... More", "NvimTreeSpecialFile" } })
   else
     for _, n in ipairs(node.nodes) do
       if not n.hidden then
