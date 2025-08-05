@@ -362,9 +362,8 @@ function Builder:build_lines(node)
       end
     end
 
-    local indent_markers = pad.get_indent_markers(self.depth + 1, idx, num_children, {}, self.markers)
-    local line = self:format_line(indent_markers, nil, { str = "..." }, { str = "More" }, {})
-    table.insert(self.lines, self:unwrap_highlighted_strings(line))
+    local indent_str = string.rep(self.explorer.opts.renderer.indent_markers.indent, self.depth + 1)
+    table.insert(self.lines, indent_str .. "... More")
     self.index = self.index + 1
   else
     for _, n in ipairs(node.nodes) do
