@@ -360,9 +360,9 @@ function Builder:build_lines(node)
   end
 
   if node.truncated then
-    local indent_str = string.rep(" ", (self.depth + 1) * self.explorer.opts.renderer.indent_width)
-    table.insert(self.lines, indent_str .. "... More")
-    self.index = self.index + 1
+    local line_nr = #self.lines
+    self.virtual_lines[line_nr] = self.virtual_lines[line_nr] or {}
+    table.insert(self.virtual_lines[line_nr], { { "... More", "NvimTreeSpecialFile" } })
   end
 
   self:add_hidden_count_string(node)
