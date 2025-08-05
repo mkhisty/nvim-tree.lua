@@ -172,7 +172,7 @@ function DirectoryNode:expand_or_collapse(toggle_group)
 
   if #self.nodes > 100 then
     self.nodes = vim.list_slice(self.nodes, 1, 100)
-    table.insert(self.nodes, { name = "... More", type = "more", parent = self })
+    self.truncated = true
   end
 
   local head_node = self:get_parent_of_group() or self

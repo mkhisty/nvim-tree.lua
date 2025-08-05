@@ -277,14 +277,6 @@ end
 ---@param idx integer line number starting at 1
 ---@param num_children integer of node
 function Builder:build_line(node, idx, num_children)
-  if node.type == "more" then
-    local indent_markers = pad.get_indent_markers(self.depth, idx, num_children, node, self.markers)
-    local line = self:format_line(indent_markers, nil, { str = "..." }, { str = "More" }, node)
-    table.insert(self.lines, self:unwrap_highlighted_strings(line))
-    self.index = self.index + 1
-    return
-  end
-
   -- various components
   local indent_markers = pad.get_indent_markers(self.depth, idx, num_children, node, self.markers)
   local arrows = pad.get_arrows(node)
@@ -366,6 +358,13 @@ function Builder:build_lines(node)
       idx = idx + 1
     end
   end
+
+  if node.truncated then
+    local indent_str = string.rep(" ", (self.depth + 1) * self.explorer.opts.renderer.indent_width)
+    table.insert(self.lines, indent_str .. "... More")
+    self.index = self.index + 1
+  end
+
   self:add_hidden_count_string(node)
 end
 
