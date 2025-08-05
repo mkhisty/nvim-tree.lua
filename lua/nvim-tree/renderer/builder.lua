@@ -277,14 +277,6 @@ end
 ---@param idx integer line number starting at 1
 ---@param num_children integer of node
 function Builder:build_line(node, idx, num_children)
-  if node.type == "more" then
-    local indent_markers = pad.get_indent_markers(self.depth, idx, num_children, {}, self.markers)
-    local line = self:format_line(indent_markers, nil, { str = "..." }, { str = "More" }, {})
-    table.insert(self.lines, self:unwrap_highlighted_strings(line))
-    self.index = self.index + 1
-    return
-  end
-
   -- various components
   local indent_markers = pad.get_indent_markers(self.depth, idx, num_children, node, self.markers)
   local arrows = pad.get_arrows(node)
@@ -359,13 +351,29 @@ function Builder:build_lines(node)
   end
   local num_children = self:num_visible(node.nodes)
   local idx = 1
-  for _, n in ipairs(node.nodes) do
-    if not n.hidden then
-      self:build_signs(n)
-      self:build_line(n, idx, num_children)
-      idx = idx + 1
+
+  if num_children > 100 then
+    for i = 1, 100 do
+      local n = node.nodes[i]
+      if not n.hidden then
+        self:build_signs(n)
+        self:build_line(n, idx, num_children)
+        idx = idx + 1
+      end
+    end
+    local line_nr = #self.lines
+    self.virtual_lines[line_nr] = self.virtual_lines[line_nr] or {}
+    table.insert(self.virtual_lines[line_nr], { { "... More", "NvimTreeSpecialFile" } })
+  else
+    for _, n in ipairs(node.nodes) do
+      if not n.hidden then
+        self:build_signs(n)
+        self:build_line(n, idx, num_children)
+        idx = idx + 1
+      end
     end
   end
+
   self:add_hidden_count_string(node)
 end
 
