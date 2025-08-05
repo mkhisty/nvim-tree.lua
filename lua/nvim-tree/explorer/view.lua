@@ -205,6 +205,7 @@ end
 
 ---@private
 ---@param bufnr integer|false|nil
+
 function View:create_buffer(bufnr)
   self:wipe_rogue_buffer()
 
