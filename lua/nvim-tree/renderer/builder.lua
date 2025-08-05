@@ -351,11 +351,24 @@ function Builder:build_lines(node)
   end
   local num_children = self:num_visible(node.nodes)
   local idx = 1
-  for _, n in ipairs(node.nodes) do
-    if not n.hidden then
-      self:build_signs(n)
-      self:build_line(n, idx, num_children)
-      idx = idx + 1
+  if num_children > 100 then
+    for i = 1, 100 do
+      local n = node.nodes[i]
+      if not n.hidden then
+        self:build_signs(n)
+        self:build_line(n, idx, num_children)
+        idx = idx + 1
+      end
+    end
+    table.insert(self.lines, "More")
+    self.index = self.index + 1
+  else
+    for _, n in ipairs(node.nodes) do
+      if not n.hidden then
+        self:build_signs(n)
+        self:build_line(n, idx, num_children)
+        idx = idx + 1
+      end
     end
   end
   self:add_hidden_count_string(node)
