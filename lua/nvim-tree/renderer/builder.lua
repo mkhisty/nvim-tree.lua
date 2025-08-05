@@ -360,9 +360,10 @@ function Builder:build_lines(node)
   end
 
   if node.truncated then
+    local indent_markers = pad.get_indent_markers(self.depth + 1, 1, 1, {}, self.markers)
     local line_nr = #self.lines
     self.virtual_lines[line_nr] = self.virtual_lines[line_nr] or {}
-    table.insert(self.virtual_lines[line_nr], { { "... More", "NvimTreeSpecialFile" } })
+    table.insert(self.virtual_lines[line_nr], { { indent_markers.str .. "... More", "NvimTreeSpecialFile" } })
   end
 
   self:add_hidden_count_string(node)
