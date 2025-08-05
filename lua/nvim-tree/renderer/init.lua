@@ -112,6 +112,7 @@ function Renderer:draw()
   local cursor = vim.api.nvim_win_get_cursor(winid or 0)
 
   local builder = Builder(self.explorer):build()
+  table.insert(builder.lines, 1, "explorer")
 
   self:_draw(bufnr, builder.lines, builder.hl_range_args, builder.signs, builder.extmarks, builder.virtual_lines)
 
