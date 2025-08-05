@@ -206,7 +206,6 @@ end
 ---@private
 ---@param bufnr integer|false|nil
 
-
 function View:create_buffer(bufnr)
   self:wipe_rogue_buffer()
 
@@ -215,6 +214,7 @@ function View:create_buffer(bufnr)
   bufnr = bufnr or vim.api.nvim_create_buf(false, false)
 
   self.bufnr_by_tabid[tabid] = bufnr
+
   globals.BUFNR_BY_TABID[tabid] = bufnr
 
   vim.api.nvim_buf_set_name(bufnr, "NvimTree_" .. tabid)
@@ -223,13 +223,13 @@ function View:create_buffer(bufnr)
     vim.api.nvim_set_option_value(option.name, option.value, { buf = bufnr })
   end
 
-  -- Add the "Explorer" title at the top
-  vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, { "Explorer", "" })
-
   self:create_autocmds(bufnr)
+
   require("nvim-tree.keymap").on_attach(bufnr)
+
   events._dispatch_tree_attached_post(bufnr)
 end
+
 ---@private
 ---@param size (fun():integer)|integer|string
 ---@return integer
