@@ -351,6 +351,7 @@ function Builder:build_lines(node)
   end
   local num_children = self:num_visible(node.nodes)
   local idx = 1
+
   if num_children > 100 then
     for i = 1, 100 do
       local n = node.nodes[i]
@@ -360,7 +361,10 @@ function Builder:build_lines(node)
         idx = idx + 1
       end
     end
-    table.insert(self.lines, "More")
+
+    local indent_markers = pad.get_indent_markers(self.depth + 1, idx, num_children, {}, self.markers)
+    local line = self:format_line(indent_markers, nil, { str = "..." }, { str = "More" }, {})
+    table.insert(self.lines, self:unwrap_highlighted_strings(line))
     self.index = self.index + 1
   else
     for _, n in ipairs(node.nodes) do
@@ -371,6 +375,7 @@ function Builder:build_lines(node)
       end
     end
   end
+
   self:add_hidden_count_string(node)
 end
 
